@@ -630,8 +630,8 @@ class OpenH264VideoDecoder : public GMPVideoDecoder {
       while (start_code < inputFrame->Buffer() + inputFrame->Size() - 4) {
         static const uint8_t code[] = { 0x00, 0x00, 0x00, 0x01 };
         uint8_t* lenp = start_code;
-        start_code += * (reinterpret_cast<int32_t*> (lenp));
-        memcpy (lenp, code, 4);
+        start_code += (lenp[0] << 24 | lenp[1] << 16 | lenp[2] << 8 | lenp[3]) + sizeof(int32_t);
+        memcpy (lenp, code, sizeof(code));
       }
     }
     break;
